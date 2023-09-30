@@ -59,4 +59,43 @@ final class PhpfilewirterTest extends TestCase
 
         $this->phpfilewriter->insertTag(10);
     }
+
+    /**
+     * Test insert a new line
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertNl(): void
+    {
+        $this->phpfilewriter->insertNl();
+
+        $this->assertEquals(PHP_EOL, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert mutliple new line
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertXNl(): void
+    {
+        $this->phpfilewriter->insertNl(2);
+
+        $this->assertEquals(PHP_EOL . PHP_EOL, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test return exception if invalid insert new line
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertNl(): void
+    {
+        $this->expectException(Exception::class);
+
+        $this->phpfilewriter->insertNl(0);
+    }
 }

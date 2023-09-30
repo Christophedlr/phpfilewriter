@@ -34,6 +34,17 @@ class Phpfilewriter
         return $this;
     }
 
+    public function insertNl(int $nbr = 1): Phpfilewriter
+    {
+        if ($nbr >= 1) {
+            $this->elements[] = str_pad('', $nbr, PHP_EOL);
+        } else {
+            throw new Exception('insertNl - Minimal insert a one new line');
+        }
+
+        return $this;
+    }
+
     /**
      * Return the content of generated PHP File
      *
