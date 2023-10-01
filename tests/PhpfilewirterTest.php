@@ -74,7 +74,7 @@ final class PhpfilewirterTest extends TestCase
     }
 
     /**
-     * Test insert mutliple new line
+     * Test insert multiple new line
      *
      * @return void
      * @throws Exception
@@ -97,5 +97,41 @@ final class PhpfilewirterTest extends TestCase
         $this->expectException(Exception::class);
 
         $this->phpfilewriter->insertNl(0);
+    }
+
+    /**
+     * Test insert a classic indentation (4 spaces)
+     *
+     * @return void
+     */
+    public function testDefaultInsertIdentation(): void
+    {
+        $this->phpfilewriter->insertIndentation();
+
+        $this->assertEquals('    ', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert one indentation with 8 spaces
+     *
+     * @return void
+     */
+    public function testInsertIndentation(): void
+    {
+        $this->phpfilewriter->insertIndentation(1, 8);
+
+        $this->assertEquals('        ', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert 4 indentations with default size (4 spaces)
+     *
+     * @return void
+     */
+    public function testXInsertIndentation(): void
+    {
+        $this->phpfilewriter->insertIndentation(4, 4);
+
+        $this->assertEquals('                ', $this->phpfilewriter->getCode());
     }
 }

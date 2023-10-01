@@ -34,6 +34,13 @@ class Phpfilewriter
         return $this;
     }
 
+    /**
+     * Insert a new line
+     *
+     * @param int $nbr
+     * @return $this
+     * @throws Exception
+     */
     public function insertNl(int $nbr = 1): Phpfilewriter
     {
         if ($nbr >= 1) {
@@ -41,6 +48,20 @@ class Phpfilewriter
         } else {
             throw new Exception('insertNl - Minimal insert a one new line');
         }
+
+        return $this;
+    }
+
+    /**
+     * Insert an indentation
+     *
+     * @param int $nbr
+     * @param int $indentation
+     * @return $this
+     */
+    public function insertIndentation(int $nbr = 1, int $indentation = 4): Phpfilewriter
+    {
+        $this->elements[] = str_pad('', $nbr * $indentation, ' ');
 
         return $this;
     }
