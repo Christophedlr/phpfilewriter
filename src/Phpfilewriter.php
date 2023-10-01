@@ -81,6 +81,19 @@ class Phpfilewriter
     }
 
     /**
+     * Insert an namespace instruction
+     *
+     * @param string $namespace
+     * @return $this
+     */
+    public function insertNamespace(string $namespace): Phpfilewriter
+    {
+        $this->elements[] = 'namespace ' . $namespace . ';';
+
+        return $this;
+    }
+
+    /**
      * Return the content of generated PHP File
      *
      * @return string

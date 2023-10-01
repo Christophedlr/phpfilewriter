@@ -158,4 +158,16 @@ final class PhpfilewirterTest extends TestCase
 
         $this->assertEquals('use My\\Full\\Classname as Another;', $this->phpfilewriter->getCode());
     }
+
+    /**
+     * Test insret namespace instruction
+     *
+     * @return void
+     */
+    public function testInsertNamespace(): void
+    {
+        $this->phpfilewriter->insertNamespace('My\\Namespace');
+
+        $this->assertEquals('namespace My\\Namespace;', $this->phpfilewriter->getCode());
+    }
 }
