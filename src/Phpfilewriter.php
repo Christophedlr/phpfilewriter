@@ -67,6 +67,20 @@ class Phpfilewriter
     }
 
     /**
+     * Insert an use instruction
+     *
+     * @param string $class
+     * @param string $as
+     * @return $this
+     */
+    public function insertUse(string $class, string $as = ''): Phpfilewriter
+    {
+        $this->elements[] = 'use ' . $class . (!empty($as) ? ' as ' . $as : '') . ';';
+
+        return $this;
+    }
+
+    /**
      * Return the content of generated PHP File
      *
      * @return string

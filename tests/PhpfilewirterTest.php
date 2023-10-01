@@ -134,4 +134,28 @@ final class PhpfilewirterTest extends TestCase
 
         $this->assertEquals('                ', $this->phpfilewriter->getCode());
     }
+
+    /**
+     * Test insert single use instruction
+     *
+     * @return void
+     */
+    public function testInsertUse(): void
+    {
+        $this->phpfilewriter->insertUse('Exception');
+
+        $this->assertEquals('use Exception;', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert use instruction with an alias
+     *
+     * @return void
+     */
+    public function testInsertUseWithAlias(): void
+    {
+        $this->phpfilewriter->insertUse('My\\Full\\Classname', 'Another');
+
+        $this->assertEquals('use My\\Full\\Classname as Another;', $this->phpfilewriter->getCode());
+    }
 }
