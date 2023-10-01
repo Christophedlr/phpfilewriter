@@ -8,6 +8,8 @@ class Phpfilewriter
 {
     public const START_TAG = 0;
     public const END_TAG = 1;
+    public const TYPE_ABSTRACT = 'abstract';
+    public const TYPE_INTERFACE = 'interface';
 
     /**
      * @var array
@@ -89,6 +91,42 @@ class Phpfilewriter
     public function insertNamespace(string $namespace): Phpfilewriter
     {
         $this->elements[] = 'namespace ' . $namespace . ';';
+
+        return $this;
+    }
+
+    /**
+     * Insert an class instruction
+     *
+     * @param string $FQDN
+     * @param string $type
+     * @return $this
+     * @throws Exception
+     */
+    public function insertClass(
+        string $FQDN,
+        string $type = '',
+        string $extends = '',
+        string $implements = ''
+    ): Phpfilewriter {
+        $class = '';
+
+        if ($type === $this::TYPE_INTERFACE && !empty($implements)) {
+            throw new Exception('insertClass - Interface does not used implements instruction');
+        }
+
+        if (empty($type)) {
+            $class = 'class';
+        } elseif ($type === $this::TYPE_INTERFACE) {
+            $class = 'interface';
+        } elseif ($type === $this::TYPE_ABSTRACT) {
+            $class = 'abstract class';
+        } else {
+            throw  new Exception('insertClass - Bad value of type');
+        }
+
+        $this->elements[] = $class . ' ' . $FQDN . (!empty($extends) ? ' extends ' . $extends : '') .
+            (!empty($implements) ? ' implements ' . $implements : '');
 
         return $this;
     }
