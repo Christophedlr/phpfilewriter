@@ -360,4 +360,64 @@ final class PhpfilewirterTest extends TestCase
 
         $this->assertEquals('public function test(): void', $this->phpfilewriter->getCode());
     }
+
+    /**
+     * Test insert a simple variable with an string value
+     *
+     * @return void
+     */
+    public function testInsertVariable(): void
+    {
+        $this->phpfilewriter->insertVariable('test', '\'A string value\'');
+
+        $this->assertEquals('$test = \'A string value\'', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert a simple variable with an integer value
+     *
+     * @return void
+     */
+    public function testInsertVariableWithIntegerValue(): void
+    {
+        $this->phpfilewriter->insertVariable('test', '1235');
+
+        $this->assertEquals('$test = 1235', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert a simple variable with an boolean value
+     *
+     * @return void
+     */
+    public function testInsertVariableWithBooleanValue(): void
+    {
+        $this->phpfilewriter->insertVariable('test', 'false');
+
+        $this->assertEquals('$test = false', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert a const property with an boolean value
+     *
+     * @return void
+     */
+    public function testInsertConstPropertyWithBooleanValue(): void
+    {
+        $this->phpfilewriter->insertVariable('test', 'false', $this->phpfilewriter::TYPE_PROPERTY_CONST);
+
+        $this->assertEquals('const $test = false', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert a const simple variable with an integer value
+     *
+     * @return void
+     */
+    public function testInsertConstVariableWithIntegerValue(): void
+    {
+        $this->phpfilewriter->insertVariable('TEST', '0x00A05', $this->phpfilewriter::TYPE_CONST);
+
+        $this->assertEquals('define(\'TEST\', 0x00A05);', $this->phpfilewriter->getCode());
+    }
 }

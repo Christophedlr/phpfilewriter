@@ -15,6 +15,9 @@ class Phpfilewriter
     public const VISIBILITY_PUBLIC = 0x20;
     public const VISIBILITY_PRIVATE = 0x21;
     public const VISIBILITY_PROTECTED = 0x22;
+    public const TYPE_VARIABLE = 0x30;
+    public const TYPE_PROPERTY_CONST = 0x31;
+    public const TYPE_CONST = 0x32;
 
     /**
      * @var array
@@ -179,6 +182,23 @@ class Phpfilewriter
         }
 
         $this->elements[] = $element;
+
+        return $this;
+    }
+
+    public function insertVariable(string $name, string $value, int $type = Phpfilewriter::TYPE_VARIABLE): Phpfilewriter
+    {
+        $element = '';
+
+        if ($type === Phpfilewriter::TYPE_PROPERTY_CONST) {
+            $this->elements[] = 'const $' . $name . ' = ' . $value;
+        } elseif ($type === Phpfilewriter::TYPE_CONST) {
+            $this->elements[] = 'define(\'' . $name . '\', ' . $value . ');';
+        } elseif ($type === Phpfilewriter::TYPE_VARIABLE) {
+            $this->elements[] = '$' . $name . ' = ' . $value;
+        } else {
+            throw new Exception('insertVariable - Type is invalid');
+        }
 
         return $this;
     }
