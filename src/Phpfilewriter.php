@@ -18,6 +18,8 @@ class Phpfilewriter
     public const TYPE_VARIABLE = 0x30;
     public const TYPE_PROPERTY_CONST = 0x31;
     public const TYPE_CONST = 0x32;
+    public const OPEN_BRACE = 0x03;
+    public const CLOSE_BRACE = 0x04;
 
     /**
      * @var array
@@ -198,6 +200,26 @@ class Phpfilewriter
             $this->elements[] = '$' . $name . ' = ' . $value;
         } else {
             throw new Exception('insertVariable - Type is invalid');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insert an open or close brace
+     *
+     * @param int $type
+     * @return $this
+     * @throws Exception
+     */
+    public function insertBrace(int $type = Phpfilewriter::OPEN_BRACE): Phpfilewriter
+    {
+        if ($type === Phpfilewriter::OPEN_BRACE) {
+            $this->elements[] = '{';
+        } elseif ($type === Phpfilewriter::CLOSE_BRACE) {
+            $this->elements[] = '}';
+        } else {
+            throw new Exception('insertBrace - Type is invalid');
         }
 
         return $this;

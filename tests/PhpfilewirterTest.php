@@ -420,4 +420,41 @@ final class PhpfilewirterTest extends TestCase
 
         $this->assertEquals('define(\'TEST\', 0x00A05);', $this->phpfilewriter->getCode());
     }
+
+    /**
+     * Test insert an open brace
+     *
+     * @return void
+     */
+    public function testInsertBrace(): void
+    {
+        $this->phpfilewriter->insertBrace();
+
+        $this->assertEquals('{', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert an open brace
+     *
+     * @return void
+     */
+    public function testInsertCloseBrace(): void
+    {
+        $this->phpfilewriter->insertBrace($this->phpfilewriter::CLOSE_BRACE);
+
+        $this->assertEquals('}', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test exception of insert brace
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertBrace(): void
+    {
+        $this->expectException(Exception::class);
+
+        $this->phpfilewriter->insertBrace($this->phpfilewriter::TYPE_CONST);
+    }
 }
