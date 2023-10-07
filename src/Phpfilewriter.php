@@ -20,6 +20,8 @@ class Phpfilewriter
     public const TYPE_CONST = 0x32;
     public const OPEN_BRACE = 0x03;
     public const CLOSE_BRACE = 0x04;
+    public const TYPE_INCLUDE = 0x40;
+    public const TYPE_REQUIRE = 0x41;
 
     /**
      * @var array
@@ -221,6 +223,35 @@ class Phpfilewriter
         } else {
             throw new Exception('insertBrace - Type is invalid');
         }
+
+        return $this;
+    }
+
+    /**
+     * Insert include or require instruction
+     *
+     * @param string $filename
+     * @param int $type
+     * @param bool $once
+     * @return $this
+     * @throws Exception
+     */
+    public function insertInclude(
+        string $filename,
+        int $type = Phpfilewriter::TYPE_INCLUDE,
+        bool $once = true
+    ): Phpfilewriter {
+        $element = '';
+
+        if ($type === Phpfilewriter::TYPE_INCLUDE) {
+            $element .= 'include' . (($once) ? '_once' : '');
+        } elseif ($type === Phpfilewriter::TYPE_REQUIRE) {
+            $element .= 'require' . (($once) ? '_once' : '');
+        } else {
+            throw new Exception('insertInclude - Type is invalid');
+        }
+
+        $this->elements[] = $element . ' \'' . $filename . '\';';
 
         return $this;
     }

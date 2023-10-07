@@ -457,4 +457,50 @@ final class PhpfilewirterTest extends TestCase
 
         $this->phpfilewriter->insertBrace($this->phpfilewriter::TYPE_CONST);
     }
+
+    /**
+     * Test insert include instruction
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertInclude(): void
+    {
+        $this->phpfilewriter->insertInclude('filename.php');
+
+        $this->assertEquals('include_once \'filename.php\';', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert include instruction with require instruction
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertIncludeWithRequire(): void
+    {
+        $this->phpfilewriter->insertInclude('filename.php', $this->phpfilewriter::TYPE_REQUIRE);
+
+        $this->assertEquals('require_once \'filename.php\';', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert include instruction without once
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertIncludeWithoutOnce(): void
+    {
+        $this->phpfilewriter->insertInclude('filename.php', $this->phpfilewriter::TYPE_INCLUDE, false);
+
+        $this->assertEquals('include \'filename.php\';', $this->phpfilewriter->getCode());
+    }
+
+    public function testExceptionInsertInclude(): void
+    {
+        $this->expectException(Exception::class);
+
+        $this->phpfilewriter->insertInclude('filename.php', 584);
+    }
 }
