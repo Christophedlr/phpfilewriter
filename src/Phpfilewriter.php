@@ -10,6 +10,11 @@ class Phpfilewriter
     public const END_TAG = 1;
     public const TYPE_ABSTRACT = 'abstract';
     public const TYPE_INTERFACE = 'interface';
+    public const TYPE_FUNCTION = 0x10;
+    public const TYPE_METHOD = 0x11;
+    public const VISIBILITY_PUBLIC = 0x20;
+    public const VISIBILITY_PRIVATE = 0x21;
+    public const VISIBILITY_PROTECTED = 0x22;
 
     /**
      * @var array
@@ -127,6 +132,53 @@ class Phpfilewriter
 
         $this->elements[] = $class . ' ' . $FQDN . (!empty($extends) ? ' extends ' . $extends : '') .
             (!empty($implements) ? ' implements ' . $implements : '');
+
+        return $this;
+    }
+
+    /**
+     * Insert a function/method instruction
+     *
+     * @param string $name
+     * @param int $type
+     * @param string $visibility
+     * @param string $returnType
+     * @param string ...$args
+     * @return $this
+     * @throws Exception
+     */
+    public function insertFunction(
+        string $name,
+        int $type = Phpfilewriter::TYPE_FUNCTION,
+        string $visibility = Phpfilewriter::VISIBILITY_PUBLIC,
+        string $returnType = 'void',
+        string ...$args
+    ): Phpfilewriter {
+        $element = '';
+
+        if ($type === Phpfilewriter::TYPE_METHOD) {
+            if ($visibility == Phpfilewriter::VISIBILITY_PUBLIC) {
+                $element .= 'public function';
+            } elseif ($visibility == Phpfilewriter::VISIBILITY_PRIVATE) {
+                $element .= 'private function';
+            } elseif ($visibility == Phpfilewriter::VISIBILITY_PROTECTED) {
+                $element .= 'protected function';
+            } else {
+                throw new Exception('insertFunction - Invalid visibility type');
+            }
+        } elseif ($type === Phpfilewriter::TYPE_FUNCTION) {
+            $element .= 'function';
+        } else {
+            throw new Exception('insertFunction - Type invalid');
+        }
+
+        $element .= ' ' . $name . '(' . implode($args, ', ') . ')';
+
+        if (!empty($returnType)) {
+            $element .= ': ' . $returnType;
+        }
+
+        $this->elements[] = $element;
 
         return $this;
     }

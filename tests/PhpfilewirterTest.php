@@ -308,4 +308,56 @@ final class PhpfilewirterTest extends TestCase
             'AnotherInterface'
         );
     }
+
+    /**
+     * Test insert function with two arguments
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertFunction(): void
+    {
+        $this->phpfilewriter->insertFunction(
+            'addition',
+            $this->phpfilewriter::TYPE_FUNCTION,
+            $this->phpfilewriter::VISIBILITY_PUBLIC,
+            'void',
+            'int $number1',
+            'int $number2'
+        );
+
+        $this->assertEquals('function addition(int $number1, int $number2): void', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert function without args
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertFunctionWithoutArgs(): void
+    {
+        $this->phpfilewriter->insertFunction(
+            'test',
+            $this->phpfilewriter::TYPE_FUNCTION
+        );
+
+        $this->assertEquals('function test(): void', $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert function without args and indicate a class method
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertFunctionWithoutArgsWithMethodType(): void
+    {
+        $this->phpfilewriter->insertFunction(
+            'test',
+            $this->phpfilewriter::TYPE_METHOD
+        );
+
+        $this->assertEquals('public function test(): void', $this->phpfilewriter->getCode());
+    }
 }
