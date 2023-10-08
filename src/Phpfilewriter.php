@@ -256,6 +256,13 @@ class Phpfilewriter
         return $this;
     }
 
+    public function insertValue(string $value): Phpfilewriter
+    {
+        $this->elements[] = $value;
+
+        return $this;
+    }
+
     /**
      * Return the content of generated PHP File
      *

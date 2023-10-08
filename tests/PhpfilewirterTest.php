@@ -497,10 +497,28 @@ final class PhpfilewirterTest extends TestCase
         $this->assertEquals('include \'filename.php\';', $this->phpfilewriter->getCode());
     }
 
+    /**
+     * Test exception of insertInclude
+     *
+     * @return void
+     * @throws Exception
+     */
     public function testExceptionInsertInclude(): void
     {
         $this->expectException(Exception::class);
 
         $this->phpfilewriter->insertInclude('filename.php', 584);
+    }
+
+    /**
+     * Test insert value
+     *
+     * @return void
+     */
+    public function testInsertBrutValue(): void
+    {
+        $this->phpfilewriter->insertValue('I\'m a brut value');
+
+        $this->assertEquals('I\'m a brut value', $this->phpfilewriter->getCode());
     }
 }
