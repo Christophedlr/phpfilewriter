@@ -521,4 +521,109 @@ final class PhpfilewirterTest extends TestCase
 
         $this->assertEquals('I\'m a brut value', $this->phpfilewriter->getCode());
     }
+
+    /**
+     * Test insert an inline comment
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertInlineComment(): void
+    {
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_INLINE, "This is an inline comment");
+
+        $this->assertEquals("// This is an inline comment", $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert an multiline comment
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertMultilinecomment(): void
+    {
+        $array[] = "First line of multi comment";
+        $array[] = "Second line of multi comment";
+
+        $expected = '/*' . PHP_EOL;
+        $expected .= ' * First line of multi comment' . PHP_EOL;
+        $expected .= ' * Second line of multi comment' . PHP_EOL;
+        $expected .= '*/' . PHP_EOL;
+
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_MULTI, $array);
+
+        $this->assertEquals($expected, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * test insert an docblock comment
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertDocBlockComment(): void
+    {
+        $expected = '/**' . PHP_EOL;
+        $expected .= ' * Brief comment' . PHP_EOL;
+        $expected .= ' * ' . PHP_EOL;
+        $expected .= ' * @param int $type' . PHP_EOL;
+        $expected .= '*/' . PHP_EOL;
+
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK, 'Brief comment');
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK, PHP_EOL);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK, '@param int $type');
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK);
+
+        $this->assertEquals($expected, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test exception call insertComment with an different type value of array of string
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertCommentWithInvalidBaseType(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_INLINE, 10);
+    }
+
+    /**
+     * Test exception call insertComment with an array data
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertInlineCommentArray(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_INLINE, ['Array data']);
+    }
+
+    /**
+     * Test exception call insertComment multiline with an string data
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertMultiCommentString(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_MULTI, 'String data');
+    }
+
+    /**
+     * Test exception call insertComment docblock with an array data
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionsInsertDocblockCommentArray(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK, ['Array data']);
+    }
 }

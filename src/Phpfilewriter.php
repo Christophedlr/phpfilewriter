@@ -22,11 +22,19 @@ class Phpfilewriter
     public const CLOSE_BRACE = 0x04;
     public const TYPE_INCLUDE = 0x40;
     public const TYPE_REQUIRE = 0x41;
+    public const COMMENT_INLINE = 0x50;
+    public const COMMENT_MULTI = 0x51;
+    public const COMMENT_DOCBLOCK = 0x52;
 
     /**
      * @var array
      */
     private $elements = [];
+
+    /**
+     * @var bool
+     */
+    private $docblock = false;
 
     /**
      * Insert a PHP tag
@@ -259,6 +267,63 @@ class Phpfilewriter
     public function insertValue(string $value): Phpfilewriter
     {
         $this->elements[] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Insert a comment
+     *
+     * @param int $type
+     * @param string|array $values
+     * @return Phpfilewriter
+     * @throws Exception
+     */
+    public function insertComment(int $type = Phpfilewriter::COMMENT_INLINE, $values = ''): Phpfilewriter
+    {
+        if (gettype($values) !== 'string' && gettype($values) !== 'array') {
+            throw new Exception('insertComment - Type of $values not allowed, only string or array');
+        }
+
+        if ($type === $this::COMMENT_INLINE) {
+            if (gettype($values) === 'array') {
+                throw new Exception('insertComment - Type of $values only an string with inline comment');
+            }
+
+            $this->elements[] = '// ' . $values;
+        } elseif ($type === $this::COMMENT_MULTI) {
+            if (gettype($values) === 'string') {
+                throw new Exception('insertComment - Type of $values only an array with multiline comment');
+            }
+
+            $this->elements[] = '/*' . PHP_EOL;
+
+            foreach ($values as $value) {
+                $this->elements[] = ' * ' . $value . PHP_EOL;
+            }
+
+            $this->elements[] = '*/' . PHP_EOL;
+        } elseif ($type === $this::COMMENT_DOCBLOCK) {
+            if (gettype($values) === 'array') {
+                throw new Exception('insertComment - Type of $values only an string with docblock comment');
+            }
+
+            if ($values === '') {
+                if (!$this->docblock) {
+                    $this->elements[] = '/**' . PHP_EOL;
+                    $this->docblock = true;
+                } else {
+                    $this->elements[] = '*/' . PHP_EOL;
+                    $this->docblock = false;
+                }
+            } else {
+                if ($values === PHP_EOL) {
+                    $this->elements[] = ' * ' . PHP_EOL;
+                } else {
+                    $this->elements[] = ' * ' . $values . PHP_EOL;
+                }
+            }
+        }
 
         return $this;
     }
