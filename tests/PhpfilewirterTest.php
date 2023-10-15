@@ -626,4 +626,64 @@ final class PhpfilewirterTest extends TestCase
         $this->expectException(Exception::class);
         $this->phpfilewriter->insertComment($this->phpfilewriter::COMMENT_DOCBLOCK, ['Array data']);
     }
+
+    /**
+     * Test insert If condition
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertIf(): void
+    {
+        $this->phpfilewriter->insertIf($this->phpfilewriter::TYPE_IF, '$test === 10');
+        $this->assertEquals('if ($test === 10)' . PHP_EOL, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert If condition with elseif
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertIfWithElseif(): void
+    {
+        $this->phpfilewriter->insertIf($this->phpfilewriter::TYPE_ELSEIF, '$test > 10');
+        $this->assertEquals('elseif ($test > 10)' . PHP_EOL, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test insert If condition with else
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInsertIfWithElse(): void
+    {
+        $this->phpfilewriter->insertIf($this->phpfilewriter::TYPE_ELSE);
+        $this->assertEquals('else' . PHP_EOL, $this->phpfilewriter->getCode());
+    }
+
+    /**
+     * Test exception insert If with invalid type
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertIfInvalidType(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertIf(1112, '$test');
+    }
+
+    /**
+     * Test exception insert If with else
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testExceptionInsertIfWithElse(): void
+    {
+        $this->expectException(Exception::class);
+        $this->phpfilewriter->insertIf($this->phpfilewriter::TYPE_ELSE, '$test');
+    }
 }

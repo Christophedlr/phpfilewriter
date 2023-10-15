@@ -25,6 +25,9 @@ class Phpfilewriter
     public const COMMENT_INLINE = 0x50;
     public const COMMENT_MULTI = 0x51;
     public const COMMENT_DOCBLOCK = 0x52;
+    public const TYPE_IF = 0x60;
+    public const TYPE_ELSEIF = 0x61;
+    public const TYPE_ELSE = 0x62;
 
     /**
      * @var array
@@ -322,6 +325,35 @@ class Phpfilewriter
                 } else {
                     $this->elements[] = ' * ' . $values . PHP_EOL;
                 }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insert If condition
+     *
+     * @param int $type
+     * @param string $condition
+     * @return $this
+     * @throws Exception
+     */
+    public function insertIf(int $type, string $condition = ''): Phpfilewriter
+    {
+        if ($type !== $this::TYPE_IF && $type !== $this::TYPE_ELSEIF && $type !== $this::TYPE_ELSE) {
+            throw new Exception('insertIf - Invalid $type');
+        }
+
+        if ($type === $this::TYPE_IF) {
+            $this->elements[] = 'if (' . $condition . ')' . PHP_EOL;
+        } elseif ($type === $this::TYPE_ELSEIF) {
+            $this->elements[] = 'elseif (' . $condition . ')' . PHP_EOL;
+        } else {
+            if ($condition === '') {
+                $this->elements[] = 'else' . PHP_EOL;
+            } else {
+                throw new Exception('insertIf - condition not allowed for else');
             }
         }
 
